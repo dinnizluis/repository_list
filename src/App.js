@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
-import Home from './components/Home';
-import ResultDetails from './components/ResultDetails';
-import UserNotFound from './components/UserNotFound';
+import Home from './components/Home.tsx';
+import ResultDetails from './components/ResultDetails.tsx';
+import UserNotFound from './components/UserNotFound.tsx';
 import './App.css';
 
 function App() {
