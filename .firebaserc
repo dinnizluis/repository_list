@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "lista-de-repositorios",
+    "hom": "lista-de-repositorios",
+    "stg": "lista-de-repositorios-stg"
+  }
+}
