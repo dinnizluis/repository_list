@@ -1,7 +1,7 @@
 const axios = require('axios').default;
-
+const baseUrl = `https://api.github.com/users/`;
 async function getUserInfo(username: string) {
-    const config = { url: `https://api.github.com/users/${username}` };
+    const config = { url: `${baseUrl}${username}` };
     let retorno = '';
     
     try {
@@ -17,7 +17,7 @@ async function getUserInfo(username: string) {
 }
 
 async function getUserRepos(username: string) {
-    const config = { url: `https://api.github.com/userss/${username}/repos` };
+    const config = { url: `${baseUrl}${username}/repos` };
     let retorno = '';
     
     try {
