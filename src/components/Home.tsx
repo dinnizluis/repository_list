@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
+import * as ROUTES from '../constants/routes';
 
 const useStyles =  makeStyles({
     githubSearch: {
@@ -57,26 +58,42 @@ const useStyles =  makeStyles({
     },
 });
 
-const Home  = () => {
-    const [retornoAPI, setRetornoAPI] = useState({});
-    const [erroChamada, setErroChamada] = useState({});
+const Home  = (props) => {
+    const [retornoAPI, setRetornoAPI] = useState<{status: any, value: any}>();
     const [username, setUserName] = useState<string>('');
     const classes = useStyles();
+
+    useEffect(() => {
+        setRetornoAPI(undefined);
+    }, []);
 
     const handleInputChange = () => event => {
         setUserName(event.target.value);
     }
 
-    const searchUser = () => {
-        getUserInfo(username)
-            .then((res) => {console.log('res', res); setRetornoAPI(res)})
-            .catch((err) => {console.log('err ', err); setErroChamada(err) });
+    const searchUser = async () => {
+        try {
+            let user = await getUserInfo(username);
+            setRetornoAPI(user);
+        }
+        catch (err) {
+            setRetornoAPI(err);
+        }
     }
 
-    const handleClick = () => {
-        let apiResponse = searchUser();
-        // Redirect to profile or not found page
+    const handleClick = async () => {
+        await searchUser();
     }
+
+    useEffect(() => {
+        console.log('retorno api : ', retornoAPI);
+        if(retornoAPI !== undefined  && retornoAPI.status === 200) {
+            props.history.push(ROUTES.RESULT + username);
+        }
+        else if(retornoAPI !== undefined  && retornoAPI.status !== 200){
+            props.history.push(ROUTES.NOT_FOUND + username); 
+        }
+    }, [retornoAPI, username, props.history]);
 
     return(
         <div id='search-page-container'>

@@ -23,7 +23,7 @@ async function getUserInfo(username: string) {
     catch (res) {
         retorno.value = (JSON.stringify(res));
         retorno.status = getStatusCode(retorno.value);
-        return retorno;
+        throw retorno;
     }
 }
 
