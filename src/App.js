@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import * as ROUTES from './constants/routes';
+import Home from './components/Home.tsx';
+import ResultDetails from './components/ResultDetails.tsx';
+import UserNotFound from './components/UserNotFound.tsx';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Staging environment
-          {/* Edit <code>src/App.js</code> and save to reload. */}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Route exact path={ROUTES.LANDING} component={Home}/>
+        <Route exact path={ROUTES.SEARCH} component={Home}/>
+        <Route exact path={ROUTES.RESULT} component={ResultDetails}/>
+        <Route exact path={ROUTES.NOT_FOUND} component={UserNotFound}/>
+      </div>
+    </Router>
   );
 }
 
