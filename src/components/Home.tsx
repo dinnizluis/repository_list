@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getUserRepos } from '../services/Github';
+import { getUserInfo } from '../services/Github';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles =  makeStyles({
@@ -36,41 +38,72 @@ const useStyles =  makeStyles({
         height: '81px',
         paddingTop: '244px',
     },
+    inputSearch: { 
+        width: '650px', 
+        height: '50px',
+        backgroundColor: 'white',
+        margin: 0,
+    },
+    searchButton: { 
+        width: '100px', 
+        height: '55px',
+        borderRadius: '2px',
+        backgroundColor: '#ac53f2',
+        color: 'white',
+    },
+    searchIcon: {
+        width:'30px',
+        hright: '30.1px',
+    },
 });
 
 const Home  = () => {
-    const [retornoAPI, setRetornoAPI] = useState('');
-    const [erroChamada, setErroChamada] = useState('');
+    const [retornoAPI, setRetornoAPI] = useState({});
+    const [erroChamada, setErroChamada] = useState({});
+    const [username, setUserName] = useState<string>('');
     const classes = useStyles();
 
-    useEffect( () => {
-        console.log('Iniciando aplicação......');
-        console.log('** Teste de chamada à API **');
-        getUserRepos('dinnizluis')
+    const handleInputChange = () => event => {
+        setUserName(event.target.value);
+    }
+
+    const searchUser = () => {
+        getUserInfo(username)
             .then((res) => {console.log('res', res); setRetornoAPI(res)})
             .catch((err) => {console.log('err ', err); setErroChamada(err) });
-    }, []);
+    }
+
+    const handleClick = () => {
+        let apiResponse = searchUser();
+        // Redirect to profile or not found page
+    }
 
     return(
-        <div>
-            {/* Home Page */}
-            <div className={classes.titleContainer}>
+        <div id='search-page-container'>
+            <div id='title' className={classes.titleContainer}>
                 <label>
                     <span className={classes.githubSearch}> Github </span>
                     <span className={classes.githubSearchTextStyle}> Search</span>
                 </label>
             </div>
-            {/* <TextField disabled id="standard-disabled" label="Disabled" defaultValue="Hello World" />
-            {retornoAPI !== null && (
-                <div>
-                    {retornoAPI}
-                </div>
-            )}
-            {erroChamada !== null && (
-                <div>
-                    {erroChamada}
-                </div>
-            )} */}
+            <div id='search-field'>
+                <TextField 
+                    variant='outlined'
+                    className={classes.inputSearch}
+                    value={username}
+                    onChange={handleInputChange()}
+                >
+                </TextField>
+                <Button 
+                    variant='contained'
+                    className={classes.searchButton}
+                    onClick={() => handleClick()}
+                >
+                    <SearchIcon
+                        className={classes.searchIcon}
+                    ></SearchIcon>
+                </Button>
+            </div>
         </div>
     );
 }

@@ -1,17 +1,28 @@
 const axios = require('axios').default;
 const baseUrl = `https://api.github.com/users/`;
+
+function getStatusCode(err) {
+    let code = 'status code ';
+    let statusTxt = err.search(code);
+    statusTxt = err.substring(statusTxt + code.length, (code.length + statusTxt + 3));
+    const statusCode = parseInt(statusTxt);
+    return statusCode;
+}
+
 async function getUserInfo(username: string) {
     const config = { url: `${baseUrl}${username}` };
-    let retorno = '';
+    let retorno = {status: 0, value: '' };
     
     try {
         const res = await axios(config);
 
-        retorno = (JSON.stringify(res.data));
+        retorno.value = (JSON.stringify(res.data));
+        retorno.status = 200;
         return retorno;
     }
     catch (res) {
-        retorno = (JSON.stringify(res));
+        retorno.value = (JSON.stringify(res));
+        retorno.status = getStatusCode(retorno.value);
         return retorno;
     }
 }
