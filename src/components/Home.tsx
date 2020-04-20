@@ -86,7 +86,6 @@ const Home  = (props) => {
     }
 
     useEffect(() => {
-        console.log('retorno api : ', retornoAPI);
         if(retornoAPI !== undefined  && retornoAPI.status === 200) {
             props.history.push(ROUTES.RESULT + username);
         }
