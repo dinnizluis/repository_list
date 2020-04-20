@@ -23,22 +23,24 @@ async function getUserInfo(username: string) {
     catch (res) {
         retorno.value = (JSON.stringify(res));
         retorno.status = getStatusCode(retorno.value);
-        return retorno;
+        throw retorno;
     }
 }
 
 async function getUserRepos(username: string) {
     const config = { url: `${baseUrl}${username}/repos` };
-    let retorno = '';
+    let retorno = {status: 0, value: '' };
     
     try {
         const res = await axios(config);
 
-        retorno = (JSON.stringify(res.data));
+        retorno.value = (JSON.stringify(res.data));
+        retorno.status = 200;
         return retorno;
     }
     catch (res) {
-        retorno = (JSON.stringify(res));
+        retorno.value = (JSON.stringify(res));
+        retorno.status = getStatusCode(retorno.value);
         return retorno;
     }
 }
