@@ -7,6 +7,7 @@ import UserNotFound from './UserNotFound';
 import * as ROUTES from '../constants/routes';
 import { getUserInfo, getUserRepos } from '../services/Github';
 import ResultDetails from './ResultDetails';
+import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles({
     container: {
@@ -164,7 +165,14 @@ const Result  = (props) => {
                 <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
             )}
             {!loaded &&(
-                <span>loading</span>
+                <div className={classes.bodyContainer}>
+                <Loader
+                    type="Oval"
+                    color="#ac53f2"
+                    height={100}
+                    width={100}
+                />
+            </div>
             )}
         </div>
     );
