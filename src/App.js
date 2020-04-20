@@ -11,8 +11,7 @@ function App() {
       <div className="App">
         <Route exact path={ROUTES.LANDING} component={Home}/>
         <Route exact path={ROUTES.SEARCH} component={Home}/>
-        <Route exact path={ROUTES.RESULT} component={Result}/>
-        <Route exact path={ROUTES.NOT_FOUND} component={Result}/>
+        <Route path={ROUTES.RESULT} component={Result}/>
       </div>
     </Router>
   );

@@ -83,15 +83,30 @@ const useStyles = makeStyles({
 const Result  = (props) => {
     const [username, setUsername] = useState<string>('');
     const [notFound, setNotFound] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const [userInfo, setUserinfo] = useState<{status: any, value: any}>();
     const [userRepos, setUserrepos] = useState<{status: any, value: any}>();
     const classes = useStyles();
 
-    const getData = async (user) => {
-        let info = await getUserInfo(user);
-        let repos = await getUserRepos(user);
-        setUserinfo(info);
-        setUserrepos(repos);
+    const getData = async () => {
+        console.log('getting data : ', username);
+        try  {
+            let info = await getUserInfo(username);
+            let repos = await getUserRepos(username);
+            setUserinfo(info);
+            setUserrepos(repos);
+            setNotFound(false);
+            setLoaded(true);
+            const fullPath = ROUTES.RESULT + username;
+            console.log('fullpath : ', fullPath);
+            props.history.push(fullPath);
+        } catch {
+            setNotFound(true);
+            setLoaded(true);
+            const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
+            console.log('fullpath : ', fullPath);
+            props.history.push(fullPath);
+        }
     }
 
     const handleInputChange = () => (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -99,33 +114,21 @@ const Result  = (props) => {
     }
 
     const handleClick = async () => {
-        try {
-            let info = await getUserInfo(username);
-            let repos = await getUserRepos(username);
-            setUserinfo(info);
-            setUserrepos(repos);
-            props.history.push(ROUTES.RESULT + username);
-        } catch {
-            setNotFound(true);
-            props.history.push(ROUTES.NOT_FOUND + username);
-        }    
+        getData();  
     }
 
-
     useEffect(() => {
-        setNotFound(false);
-    }, [userInfo, userRepos]);
-
-    useEffect(() => {
-        let user: string = props.history.location.pathname.toString();
-        if(user.includes(ROUTES.NOT_FOUND)) {
-            user = user.substring(19);
-            setUsername(user);
-        } else if (user.includes(ROUTES.RESULT)){
-            user = user.substring(17);
-            getData(user);
-            setUsername(user);
+        if(username.length > 0){
+            console.log('username changed : ', username);
+            getData();
         }
+    }, [username]);
+
+    useEffect(() => {
+        console.log('Ao construir o componente');
+        let user: string = props.history.location.pathname.toString();
+        user = user.substring(17);
+        setUsername(user);
     }, [])
 
     return(
@@ -152,13 +155,16 @@ const Result  = (props) => {
                     </Button>
                 </label>
             </div>
-            {notFound &&(
+            {notFound && loaded &&(
             <div className={classes.bodyContainer}>
                 <UserNotFound />
             </div>
             )}
-            {!notFound && userInfo !== null && userRepos !== null &&(
+            {!notFound && loaded &&(
                 <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
+            )}
+            {!loaded &&(
+                <span>loading</span>
             )}
         </div>
     );

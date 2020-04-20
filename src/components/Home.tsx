@@ -63,9 +63,9 @@ const Home  = (props) => {
     const [username, setUserName] = useState<string>('');
     const classes = useStyles();
 
-    useEffect(() => {
-        setRetornoAPI(undefined);
-    }, []);
+    // useEffect(() => {
+    //     setRetornoAPI(undefined);
+    // }, []);
 
     const handleInputChange = () => event => {
         setUserName(event.target.value);
@@ -82,17 +82,18 @@ const Home  = (props) => {
     }
 
     const handleClick = async () => {
-        await searchUser();
+        // await searchUser();
+        props.history.push(ROUTES.RESULT + username);
     }
 
-    useEffect(() => {
-        if(retornoAPI !== undefined  && retornoAPI.status === 200) {
-            props.history.push(ROUTES.RESULT + username);
-        }
-        else if(retornoAPI !== undefined  && retornoAPI.status !== 200){
-            props.history.push(ROUTES.NOT_FOUND + username); 
-        }
-    }, [retornoAPI, username, props.history]);
+    // useEffect(() => {
+    //     if(retornoAPI !== undefined  && retornoAPI.status === 200) {
+    //         props.history.push(ROUTES.RESULT + username);
+    //     }
+    //     else if(retornoAPI !== undefined  && retornoAPI.status !== 200){
+    //         props.history.push(ROUTES.NOT_FOUND + username); 
+    //     }
+    // }, [retornoAPI, username, props.history]);
 
     return(
         <div id='search-page-container'>
