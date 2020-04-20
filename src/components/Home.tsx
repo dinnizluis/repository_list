@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { getUserInfo } from '../services/Github';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
@@ -59,40 +58,16 @@ const useStyles =  makeStyles({
 });
 
 const Home  = (props) => {
-    const [retornoAPI, setRetornoAPI] = useState<{status: any, value: any}>();
     const [username, setUserName] = useState<string>('');
     const classes = useStyles();
-
-    useEffect(() => {
-        setRetornoAPI(undefined);
-    }, []);
 
     const handleInputChange = () => event => {
         setUserName(event.target.value);
     }
 
-    const searchUser = async () => {
-        try {
-            let user = await getUserInfo(username);
-            setRetornoAPI(user);
-        }
-        catch (err) {
-            setRetornoAPI(err);
-        }
-    }
-
     const handleClick = async () => {
-        await searchUser();
+        props.history.push(ROUTES.RESULT + username);
     }
-
-    useEffect(() => {
-        if(retornoAPI !== undefined  && retornoAPI.status === 200) {
-            props.history.push(ROUTES.RESULT + username);
-        }
-        else if(retornoAPI !== undefined  && retornoAPI.status !== 200){
-            props.history.push(ROUTES.NOT_FOUND + username); 
-        }
-    }, [retornoAPI, username, props.history]);
 
     return(
         <div id='search-page-container'>
@@ -108,6 +83,9 @@ const Home  = (props) => {
                     className={classes.inputSearch}
                     value={username}
                     onChange={handleInputChange()}
+                    inputProps={{
+                        style: {fontSize: '18px', fontFamily:  'Raleway', color: '#5c5c5c', fontWeight: 300,},
+                    }}
                 >
                 </TextField>
                 <Button 

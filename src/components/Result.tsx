@@ -7,11 +7,11 @@ import UserNotFound from './UserNotFound';
 import * as ROUTES from '../constants/routes';
 import { getUserInfo, getUserRepos } from '../services/Github';
 import ResultDetails from './ResultDetails';
+import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles({
     container: {
         flexDirection: 'row',
-        // marginLeft: '35px',
         width: '100%',
     },
     bodyContainer: {
@@ -30,7 +30,6 @@ const useStyles = makeStyles({
         letterSpacing: 'normal',
         color: '#000000',
         alignSelf: 'flex-start',
-        // marginLeft: '25px',
     },
     githubSearchTextStyle: {
         flex: 6,
@@ -64,7 +63,6 @@ const useStyles = makeStyles({
         height: '50px',
         backgroundColor: 'white',
         margin: 0,
-        // paddingTop: '35px',
     },
     searchButton: { 
         width: '100px', 
@@ -83,15 +81,27 @@ const useStyles = makeStyles({
 const Result  = (props) => {
     const [username, setUsername] = useState<string>('');
     const [notFound, setNotFound] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const [userInfo, setUserinfo] = useState<{status: any, value: any}>();
     const [userRepos, setUserrepos] = useState<{status: any, value: any}>();
     const classes = useStyles();
 
-    const getData = async (user) => {
-        let info = await getUserInfo(user);
-        let repos = await getUserRepos(user);
-        setUserinfo(info);
-        setUserrepos(repos);
+    const getData = async () => {
+        try  {
+            let info = await getUserInfo(username);
+            let repos = await getUserRepos(username);
+            setUserinfo(info);
+            setUserrepos(repos);
+            setNotFound(false);
+            setLoaded(true);
+            const fullPath = ROUTES.RESULT + username;
+            props.history.push(fullPath);
+        } catch {
+            setNotFound(true);
+            setLoaded(true);
+            const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
+            props.history.push(fullPath);
+        }
     }
 
     const handleInputChange = () => (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -99,33 +109,19 @@ const Result  = (props) => {
     }
 
     const handleClick = async () => {
-        try {
-            let info = await getUserInfo(username);
-            let repos = await getUserRepos(username);
-            setUserinfo(info);
-            setUserrepos(repos);
-            props.history.push(ROUTES.RESULT + username);
-        } catch {
-            setNotFound(true);
-            props.history.push(ROUTES.NOT_FOUND + username);
-        }    
+        getData();  
     }
 
-
     useEffect(() => {
-        setNotFound(false);
-    }, [userInfo, userRepos]);
+        if(username.length > 0){
+            getData();
+        }
+    }, [username]);
 
     useEffect(() => {
         let user: string = props.history.location.pathname.toString();
-        if(user.includes(ROUTES.NOT_FOUND)) {
-            user = user.substring(19);
-            setUsername(user);
-        } else if (user.includes(ROUTES.RESULT)){
-            user = user.substring(17);
-            getData(user);
-            setUsername(user);
-        }
+        user = user.substring(17);
+        setUsername(user);
     }, [])
 
     return(
@@ -139,6 +135,9 @@ const Result  = (props) => {
                         className={classes.inputSearch}
                         value={username}
                         onChange={handleInputChange()}
+                        inputProps={{
+                            style: {fontSize: '18px', fontFamily:  'Raleway', color: '#5c5c5c', fontWeight: 300,},
+                        }}
                     >
                     </TextField>
                     <Button 
@@ -152,13 +151,23 @@ const Result  = (props) => {
                     </Button>
                 </label>
             </div>
-            {notFound &&(
+            {notFound && loaded &&(
             <div className={classes.bodyContainer}>
                 <UserNotFound />
             </div>
             )}
-            {!notFound && userInfo !== null && userRepos !== null &&(
+            {!notFound && loaded &&(
                 <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
+            )}
+            {!loaded &&(
+                <div className={classes.bodyContainer}>
+                <Loader
+                    type="Oval"
+                    color="#ac53f2"
+                    height={100}
+                    width={100}
+                />
+            </div>
             )}
         </div>
     );
