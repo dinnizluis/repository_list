@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 import * as ROUTES from '../../constants/routes';
+import Search from '../../Icons/Search';
 
 const useStyles =  makeStyles({
     githubSearch: {
@@ -52,8 +53,8 @@ const useStyles =  makeStyles({
         color: 'white',
     },
     searchIcon: {
-        width:'30px',
-        hright: '30.1px',
+        width:'38px',
+        hright: '38px',
     },
 });
 
@@ -93,9 +94,9 @@ const Home  = (props) => {
                     className={classes.searchButton}
                     onClick={() => handleClick()}
                 >
-                    <SearchIcon
+                    <Search
                         className={classes.searchIcon}
-                    ></SearchIcon>
+                    ></Search>
                 </Button>
             </div>
         </div>

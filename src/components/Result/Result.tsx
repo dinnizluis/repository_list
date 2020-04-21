@@ -8,6 +8,7 @@ import * as ROUTES from '../../constants/routes';
 import { getUserInfo, getUserRepos } from '../../services/Github';
 import ResultDetails from '../ResultDetails/ResultDetails';
 import Loader from 'react-loader-spinner';
+import Search from '../../Icons/Search';
 
 const useStyles = makeStyles({
     container: {
@@ -63,6 +64,7 @@ const useStyles = makeStyles({
         height: '50px',
         backgroundColor: 'white',
         margin: 0,
+        color: 'secondary',
     },
     searchButton: { 
         width: '100px', 
@@ -73,8 +75,8 @@ const useStyles = makeStyles({
         marginBottom: 20,
     },
     searchIcon: {
-        width:'30px',
-        hright: '30.1px',
+        width:'38px',
+        hright: '38px',
     },
 });
 
@@ -145,9 +147,9 @@ const Result  = (props) => {
                         className={classes.searchButton}
                         onClick={() => handleClick()}
                     >
-                        <SearchIcon
+                        <Search
                             className={classes.searchIcon}
-                        ></SearchIcon>
+                        ></Search>
                     </Button>
                 </label>
             </div>

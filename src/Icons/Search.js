@@ -2,7 +2,7 @@ import * as React from "react";
 
 function SvgSearch(props) {
   return (
-    <svg width={37} height={38} fill="none" {...props}>
+    <svg width={30} height={30.1} fill="none" {...props}>
       <path
         fill="#fff"
         fillRule="evenodd"
