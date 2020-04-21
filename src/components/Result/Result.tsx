@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import UserNotFound from '../UserNotFound/UserNotFound';
 import * as ROUTES from '../../constants/routes';
 import { getUserInfo, getUserRepos } from '../../services/Github';
@@ -81,50 +80,75 @@ const useStyles = makeStyles({
 });
 
 const Result  = (props) => {
-    const [username, setUsername] = useState<string>('');
+    const [username, setUsername] = useState<string>(props.history.location.pathname.toString().substring(17));
     const [notFound, setNotFound] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const [userInfo, setUserinfo] = useState<{status: any, value: any}>();
     const [userRepos, setUserrepos] = useState<{status: any, value: any}>();
     const classes = useStyles();
 
-    const getData = async () => {
-        try  {
-            let info = await getUserInfo(username);
-            let repos = await getUserRepos(username);
-            setUserinfo(info);
-            setUserrepos(repos);
-            setNotFound(false);
-            setLoaded(true);
-            const fullPath = ROUTES.RESULT + username;
-            props.history.push(fullPath);
-        } catch {
-            setNotFound(true);
-            setLoaded(true);
-            const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
-            props.history.push(fullPath);
-        }
-    }
+    
 
     const handleInputChange = () => (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setUsername(event.target.value);
     }
 
     const handleClick = async () => {
-        getData();  
+        if(username.length > 0) {
+            try  {
+                console.log("hi");
+                let info = await getUserInfo(username);
+                let repos = await getUserRepos(username);
+                setUserinfo(info);
+                setUserrepos(repos);
+                setNotFound(false);
+                setLoaded(true);
+                // const fullPath = ROUTES.RESULT + username;
+                // props.history.push(fullPath);
+            } catch {
+                console.log("request failed");
+                setNotFound(true);
+                setLoaded(true);
+                // const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
+                // props.history.push(fullPath);
+            }
+        }
     }
 
-    useEffect(() => {
-        if(username.length > 0){
-            getData();
-        }
-    }, [username]);
+    // useEffect(() => {
+    //     if(username.length > 0){
+    //         getData();
+    //     }
+    // }, [username]);
 
     useEffect(() => {
-        let user: string = props.history.location.pathname.toString();
-        user = user.substring(17);
-        setUsername(user);
-    }, [])
+
+        async function getData() {
+            if(username.length > 0) {
+                try  {
+                    console.log("hi");
+                    let info = await getUserInfo(username);
+                    let repos = await getUserRepos(username);
+                    setUserinfo(info);
+                    setUserrepos(repos);
+                    setNotFound(false);
+                    setLoaded(true);
+                    const fullPath = ROUTES.RESULT + username;
+                    props.history.push(fullPath);
+                } catch {
+                    console.log("request failed");
+                    setNotFound(true);
+                    setLoaded(true);
+                    // const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
+                    // props.history.push(fullPath);
+                }
+            }
+        }
+        
+        console.log('username: ', username);
+        console.log("getting data");
+        getData();
+    }, [username]);
 
     return(
         <div id='result-page-container' className={classes.container}>
@@ -153,14 +177,6 @@ const Result  = (props) => {
                     </Button>
                 </label>
             </div>
-            {/* {notFound && loaded &&(
-            <div className={classes.bodyContainer}>
-                <UserNotFound />
-            </div>
-            )}
-            {!notFound && loaded &&( */}
-                <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
-            {/* )}
             {!loaded &&(
                 <div className={classes.bodyContainer}>
                     <Loader
@@ -170,7 +186,15 @@ const Result  = (props) => {
                         width={100}
                     />
                 </div>
-            )} */}
+            )}
+            {notFound && loaded &&(
+            <div className={classes.bodyContainer}>
+                <UserNotFound />
+            </div>
+            )}
+            {!notFound && loaded &&(
+                <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
+            )}
         </div>
     );
 }

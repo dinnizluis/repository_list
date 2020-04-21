@@ -41,6 +41,7 @@ async function getUserRepos(username: string) {
     }
     catch (res) {
         retorno.value = (JSON.stringify(res));
+        console.log('erro :::: ', retorno.value);
         retorno.status = getStatusCode(retorno.value);
         return retorno;
     }
