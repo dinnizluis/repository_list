@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import UserNotFound from './UserNotFound';
-import * as ROUTES from '../constants/routes';
-import { getUserInfo, getUserRepos } from '../services/Github';
-import ResultDetails from './ResultDetails';
+import UserNotFound from '../UserNotFound/UserNotFound';
+import * as ROUTES from '../../constants/routes';
+import { getUserInfo, getUserRepos } from '../../services/Github';
+import ResultDetails from '../ResultDetails/ResultDetails';
 import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles({
@@ -151,24 +151,24 @@ const Result  = (props) => {
                     </Button>
                 </label>
             </div>
-            {notFound && loaded &&(
+            {/* {notFound && loaded &&(
             <div className={classes.bodyContainer}>
                 <UserNotFound />
             </div>
             )}
-            {!notFound && loaded &&(
+            {!notFound && loaded &&( */}
                 <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
-            )}
+            {/* )}
             {!loaded &&(
                 <div className={classes.bodyContainer}>
-                <Loader
-                    type="Oval"
-                    color="#ac53f2"
-                    height={100}
-                    width={100}
-                />
-            </div>
-            )}
+                    <Loader
+                        type="Oval"
+                        color="#ac53f2"
+                        height={100}
+                        width={100}
+                    />
+                </div>
+            )} */}
         </div>
     );
 }

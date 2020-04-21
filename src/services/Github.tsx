@@ -36,6 +36,7 @@ async function getUserRepos(username: string) {
 
         retorno.value = (JSON.stringify(res.data));
         retorno.status = 200;
+        console.log('retorno ', retorno.value);
         return retorno;
     }
     catch (res) {
