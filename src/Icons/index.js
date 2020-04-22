@@ -1,0 +1,6 @@
+export { default as Followers } from './Followers'
+export { default as Location } from './Location'
+export { default as Organization } from './Organization'
+export { default as Repositories } from './Repositories'
+export { default as Search } from './Search'
+export { default as Star } from './Star'
