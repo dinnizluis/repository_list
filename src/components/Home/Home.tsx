@@ -4,30 +4,31 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import * as ROUTES from '../../constants/routes';
 import Search from '../../Icons/Search';
+import theme from '../../theme';
 
 const useStyles =  makeStyles({
     githubSearch: {
         width: '415px',
         height: '81px',
-        fontFamily: 'Monaco',
+        fontFamily: theme.Fonts.monaco,
         fontSize: '60px',
         fontWeight: 'normal',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: 'normal',
         letterSpacing: 'normal',
-        color: '#000000',
+        color: theme.Colors.black,
         margin: 0,
     },
     githubSearchTextStyle: {
         width: '415px',
         height: '81px',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontWeight: 200,
         fontStyle: 'italic',
         margin: 0,
         fontSize: '60px',
-        color: '#000000',
+        color: theme.Colors.black,
         alignSelf: 'flex-start',
     },
     titleContainer: {
@@ -41,15 +42,15 @@ const useStyles =  makeStyles({
     inputSearch: { 
         width: '650px', 
         height: '50px',
-        backgroundColor: 'white',
+        backgroundColor: theme.Colors.white,
         margin: 0,
     },
     searchButton: { 
         width: '100px', 
         height: '55px',
         borderRadius: '2px',
-        backgroundColor: '#ac53f2',
-        color: 'white',
+        backgroundColor: theme.Colors.lightPurple,
+        color: theme.Colors.white,
     },
     searchIcon: {
         width:'38px',

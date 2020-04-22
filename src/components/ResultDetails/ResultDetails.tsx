@@ -1,6 +1,5 @@
 import React from 'react';
-import Img from 'react-image'
-import Loader from 'react-loader-spinner';
+import Img from 'react-image';
 import { List, ListItem, } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Organization from '../../Icons/Organization';
@@ -8,6 +7,7 @@ import Location from '../../Icons/Location';
 import Star from '../../Icons/Star';
 import Repositories from '../../Icons/Repositories';
 import Followers from '../../Icons/Followers';
+import theme from '../../theme';
 
 const useStyles = makeStyles({
     container: { 
@@ -16,7 +16,6 @@ const useStyles = makeStyles({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-        // backgroundColor: 'purple',
         padding: 30,
     },
     leftSide: {
@@ -24,11 +23,8 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         flex: 2,
         alignSelf: 'flex-start',
-        backgroundColor: 'white',
+        backgroundColor: theme.Colors.white,
         height: '90%',
-        borderColor: 'red',
-        borderRadius: 10,
-        borderWidth: 5,
         marginLeft: 65,
     },
     infoItem: {
@@ -46,7 +42,7 @@ const useStyles = makeStyles({
     },
     infoText: {
         display: 'flex',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontWeight: 300,
         fontSize: '20px',
         color: '#5c5c5c',
@@ -57,16 +53,16 @@ const useStyles = makeStyles({
         width: '280px',
         height: '280px',
         borderRadius: '2px',
-        boxShadow: '0 0 4px NaNpx var(--black-40)',
+        boxShadow: theme.Colors.boxShadow,
         padding: 5,
     },
     name: {
         display: 'flex',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontWeight: 300,
         fontSize: '35px',
         marginLeft: 2,
-        color: '#000000',
+        color: theme.Colors.black,
         paddingBottom: 3,
     },
     infoSection: {
@@ -78,7 +74,7 @@ const useStyles = makeStyles({
         display: 'flex',
         flex: 6,
         alignSelf: 'flex-start',
-        backgroundColor: 'white',
+        backgroundColor: theme.Colors.white,
         marginLeft: 95,
     },
     labelItem: {
@@ -91,25 +87,38 @@ const useStyles = makeStyles({
     labelItemText: {
         display: 'flex',
         fontSize: '20px',
-        fontFamily: 'Raleway',
-        color: '#5c5c5c',
+        fontFamily: theme.Fonts.raleway,
+        color: theme.Colors.gray,
         fontWeight: 300,
         marginLeft: 5,
     },
     titleItem: {
         display: 'flex',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontSize: '35px',
-        color: '#ac53f2',
+        color: theme.Colors.lightPurple,
         fontWeight: 'normal',
     },
     subtitleItem: {
         display: 'flex',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontSize: '20px',
-        color: '#000000',
+        color: theme.Colors.black,
         fontWeight: 300,
-    }, 
+    },
+    msg: {
+        width: '315px',
+        height: '41px',
+        fontFamily: theme.Fonts.raleway,
+        fontSize: '40px',
+        fontWeight: 'normal',
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: 'normal',
+        letterSpacing: 'normal',
+        color: theme.Colors.lightPurple,
+        paggingTop: '209px',
+    },
 });
 
 const ResultDetails  = (props) => {
@@ -119,10 +128,11 @@ const ResultDetails  = (props) => {
     const classes = useStyles();
 
     React.useEffect(() => {
-        console.log('Loading data to display');
-        console.log('results ::::::::::: \n', info, repos);
         if(info !== undefined && repos !== undefined) {
             setLoaded(true);
+        }
+        else {
+            setLoaded(false);
         }
     }, []);
 
@@ -167,7 +177,7 @@ const ResultDetails  = (props) => {
         <div>
             {!loaded && (
                 <div>
-                    <span>Failed to get data</span>
+                    <span className={classes.msg}>Failed to get data</span>
                 </div>
             )}
             {loaded && (
