@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import UserNotFound from './UserNotFound';
-import * as ROUTES from '../constants/routes';
-import { getUserInfo, getUserRepos } from '../services/Github';
-import ResultDetails from './ResultDetails';
+import UserNotFound from '../UserNotFound/UserNotFound';
+import * as ROUTES from '../../constants/routes';
+import { getUserInfo, getUserReposSortedByStars } from '../../services/Github';
+import ResultDetails from '../ResultDetails/ResultDetails';
 import Loader from 'react-loader-spinner';
+import Search from '../../Icons/Search';
+import theme from '../../theme';
 
 const useStyles = makeStyles({
     container: {
@@ -21,136 +22,155 @@ const useStyles = makeStyles({
         flex: 4,
         width: '280px',
         height: '50px',
-        fontFamily: 'Monaco',
+        fontFamily: theme.Fonts.monaco,
         fontSize: '40px',
         fontWeight: 'normal',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: 'normal',
         letterSpacing: 'normal',
-        color: '#000000',
+        color: theme.Colors.black,
         alignSelf: 'flex-start',
     },
     githubSearchTextStyle: {
         flex: 6,
         width: '280',
         height: '50px',
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontWeight: 200,
         fontStyle: 'italic',
         fontSize: '40px',
-        color: '#000000',
+        color: theme.Colors.black,
         marginRight: '90px',
     },
     titleContainer: {
         alignSelf: 'flex-start',
         width: '100%',
         paddingTop: '35px',
-        backgroudColor: 'red',
     },
     inputText: {
-        fontFamily: 'Raleway',
+        fontFamily: theme.Fonts.raleway,
         fontSize: '20px',
         fontWeight: 300,
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: 'normal',
         letterSpacing: 'normal',
-        color: '#5c5c5c',
+        color: theme.Colors.gray,
     },
     inputSearch: { 
         width: '650px', 
         height: '50px',
-        backgroundColor: 'white',
+        backgroundColor: theme.Colors.white,
         margin: 0,
+        color: 'secondary',
     },
     searchButton: { 
         width: '100px', 
         height: '55px',
         borderRadius: '2px',
-        backgroundColor: '#ac53f2',
-        color: 'white',
+        backgroundColor: theme.Colors.lightPurple,
+        color: theme.Colors.white,
         marginBottom: 20,
     },
     searchIcon: {
-        width:'30px',
-        hright: '30.1px',
+        width:'38px',
+        hright: '38px',
     },
 });
 
 const Result  = (props) => {
-    const [username, setUsername] = useState<string>('');
+    const getUsername = () => {
+        let location = props.history.location.pathname.toString();
+        if(location.includes(ROUTES.NOT_FOUND)) {
+            return(location.substring(ROUTES.RESULT.length, location.match(ROUTES.NOT_FOUND).index));
+        }
+        else {
+            return(location.substring(ROUTES.RESULT.length));
+        }
+    }
+    const [username, setUsername] = useState<string>(getUsername());
     const [notFound, setNotFound] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const [userInfo, setUserinfo] = useState<{status: any, value: any}>();
     const [userRepos, setUserrepos] = useState<{status: any, value: any}>();
     const classes = useStyles();
 
-    const getData = async () => {
-        try  {
-            let info = await getUserInfo(username);
-            let repos = await getUserRepos(username);
-            setUserinfo(info);
-            setUserrepos(repos);
-            setNotFound(false);
-            setLoaded(true);
-            const fullPath = ROUTES.RESULT + username;
-            props.history.push(fullPath);
-        } catch {
-            setNotFound(true);
-            setLoaded(true);
-            const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
-            props.history.push(fullPath);
-        }
-    }
+    useEffect(() => {
+       setUsername(getUsername());
+    }, [props.history.location.pathname]);
 
     const handleInputChange = () => (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setUsername(event.target.value);
     }
 
-    const handleClick = async () => {
-        getData();  
-    }
-
-    useEffect(() => {
-        if(username.length > 0){
-            getData();
+    const handleUsername = async () => {
+        async function getData() {
+            if(username.length > 0) {
+                try  {
+                    let info = await getUserInfo(username);
+                    let repos = await getUserReposSortedByStars(username);
+                    setUserinfo(info);
+                    setUserrepos(repos);
+                    setNotFound(false);
+                    setLoaded(true);
+                    const fullPath = ROUTES.RESULT + username;
+                    props.history.push(fullPath);
+                } catch {
+                    setNotFound(true);
+                    setLoaded(true);
+                    const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
+                    props.history.push(fullPath);
+                }
+            }
         }
-    }, [username]);
+        
+        getData();
+    }   
 
     useEffect(() => {
-        let user: string = props.history.location.pathname.toString();
-        user = user.substring(17);
-        setUsername(user);
-    }, [])
+        handleUsername();
+    }, []);
 
     return(
         <div id='result-page-container' className={classes.container}>
             <div id='header' className={classes.titleContainer}>
-                <label>
-                    <span className={classes.githubSearch}> Github </span>
-                    <span className={classes.githubSearchTextStyle}> Search</span>
+                <label >
+                    <label onClick={() => props.history.push('/')}>
+                        <span className={classes.githubSearch}> Github </span>
+                        <span className={classes.githubSearchTextStyle}> Search</span>
+                    </label>
                     <TextField 
                         variant='outlined'
                         className={classes.inputSearch}
                         value={username}
                         onChange={handleInputChange()}
                         inputProps={{
-                            style: {fontSize: '18px', fontFamily:  'Raleway', color: '#5c5c5c', fontWeight: 300,},
+                            style: {fontSize: '18px', fontFamily:  theme.Fonts.raleway, color: theme.Colors.gray, fontWeight: 300,},
                         }}
                     >
                     </TextField>
                     <Button 
                         variant='contained'
                         className={classes.searchButton}
-                        onClick={() => handleClick()}
+                        onClick={() => handleUsername()}
                     >
-                        <SearchIcon
+                        <Search
                             className={classes.searchIcon}
-                        ></SearchIcon>
+                        ></Search>
                     </Button>
                 </label>
             </div>
+            {!loaded &&(
+                <div className={classes.bodyContainer}>
+                    <Loader
+                        type="Oval"
+                        color={theme.Colors.lightPurple}
+                        height={100}
+                        width={100}
+                    />
+                </div>
+            )}
             {notFound && loaded &&(
             <div className={classes.bodyContainer}>
                 <UserNotFound />
@@ -158,16 +178,6 @@ const Result  = (props) => {
             )}
             {!notFound && loaded &&(
                 <ResultDetails commonProps={{info: userInfo, repos: userRepos}}/>
-            )}
-            {!loaded &&(
-                <div className={classes.bodyContainer}>
-                <Loader
-                    type="Oval"
-                    color="#ac53f2"
-                    height={100}
-                    width={100}
-                />
-            </div>
             )}
         </div>
     );

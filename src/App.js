@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
-import Home from './components/Home.tsx';
-import Result from './components/Result.tsx';
+import Home from './components/Home/Home.tsx';
+import Result from './components/Result/Result.tsx';
 import './App.css';
 
 function App() {
