@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import UserNotFound from '../UserNotFound/UserNotFound';
 import * as ROUTES from '../../constants/routes';
-import { getUserInfo, getUserRepos } from '../../services/Github';
+import { getUserInfo, getUserReposSortedByStars } from '../../services/Github';
 import ResultDetails from '../ResultDetails/ResultDetails';
 import Loader from 'react-loader-spinner';
 import Search from '../../Icons/Search';
@@ -109,7 +109,7 @@ const Result  = (props) => {
             if(username.length > 0) {
                 try  {
                     let info = await getUserInfo(username);
-                    let repos = await getUserRepos(username);
+                    let repos = await getUserReposSortedByStars(username);
                     setUserinfo(info);
                     setUserrepos(repos);
                     setNotFound(false);
@@ -135,9 +135,11 @@ const Result  = (props) => {
     return(
         <div id='result-page-container' className={classes.container}>
             <div id='header' className={classes.titleContainer}>
-                <label>
-                    <span className={classes.githubSearch}> Github </span>
-                    <span className={classes.githubSearchTextStyle}> Search</span>
+                <label >
+                    <label onClick={() => props.history.push('/')}>
+                        <span className={classes.githubSearch}> Github </span>
+                        <span className={classes.githubSearchTextStyle}> Search</span>
+                    </label>
                     <TextField 
                         variant='outlined'
                         className={classes.inputSearch}
