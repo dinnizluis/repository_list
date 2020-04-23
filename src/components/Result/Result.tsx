@@ -116,7 +116,7 @@ const Result  = (props) => {
                     setLoaded(true);
                     const fullPath = ROUTES.RESULT + username;
                     props.history.push(fullPath);
-                } catch {
+                } catch (err) {
                     setNotFound(true);
                     setLoaded(true);
                     const fullPath = ROUTES.RESULT + username + ROUTES.NOT_FOUND;
