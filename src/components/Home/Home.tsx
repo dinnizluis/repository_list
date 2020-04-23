@@ -85,7 +85,7 @@ const Home  = (props) => {
                     value={username}
                     onChange={handleInputChange()}
                     inputProps={{
-                        style: {fontSize: '18px', fontFamily:  'Raleway', color: '#5c5c5c', fontWeight: 300,},
+                        style: {fontSize: '18px', fontFamily:  theme.Fonts.raleway, color: theme.Colors.gray, fontWeight: 300,},
                     }}
                 >
                 </TextField>
