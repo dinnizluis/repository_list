@@ -1,7 +1,7 @@
 const axios = require('axios').default;
 const baseUrl = `https://api.github.com/users/`;
 
-function dynamicsort(property,order) {
+function dynamicsort(property, order) {
     var sort_order = 1;
     if(order === "desc"){
         sort_order = -1;
@@ -30,7 +30,7 @@ function getStatusCode(err) {
 
 async function getUserInfo(username: string) {
     const config = { url: `${baseUrl}${username}` };
-    let retorno = {status: 0, value: '' };
+    let retorno = {status: 0, value: '', msg: '' };
     
     try {
         const res = await axios(config);
@@ -70,7 +70,6 @@ async function getUserReposSortedByStars(username: string) {
         let sorted = JSON.parse(ret.value);
         sorted = sorted.sort((dynamicsort("stargazers_count", "desc")));
         ret.value = JSON.stringify(sorted);
-        console.log('sorted = ', sorted);
         return ret;
     }
     catch (res){
